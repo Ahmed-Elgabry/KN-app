@@ -1,0 +1,52 @@
+@extends('system.layout')
+
+@section('content')
+
+
+    {!! Form::open(['id'=>'main-form','onsubmit' =>  isset($result) ? 'FormSubmit("'.route('system.bill.update',$result->id).'");return false;':'FormSubmit("'.route('system.bill.store') .'");return false;','method' => isset($result) ?  'PATCH' : 'POST']) !!}
+    <div id="form-alert-message"></div>
+    <!--begin::Row-->
+    <div class="row gx-10 ">
+        <!--begin::Col-->
+        <div class="col-lg-12 ">
+        {{ label(__('Operator'),'required') }}
+        <!--begin::Input group-->
+            <div class="mb-5">
+                <select name="operator_id" class="form-control form-control-solid">
+                    @foreach($operators as $operator)
+                        <option value="{{ $operator->id }}" {{ (isset($result) && $operator->id == $result->operator_id) ? 'selected' : '' }}>{{ $operator->name }}</option>
+                    @endforeach
+                </select>
+                <div class="invalid-feedback" id="name-form-error"></div>
+            </div>
+
+            <!--end::Input group-->
+        </div>
+    </div>
+
+    <div class="row gx-10 ">
+        @foreach($types as $type)
+            <div class="col-lg-4">
+                <div class="mb-5">
+                    <input name="type[]" type="checkbox" value="{{ $type->id }}" {{ (isset($result) && $result->billItems->where('type_id', $type->id)->first()) ? 'checked' : '' }}>
+                    <label> {{ $type->name . '-'. $type->price }} </label>
+                    <div class="invalid-feedback" id="price-form-error"></div>
+                </div>
+            </div>
+        @endforeach
+
+
+    </div>
+    <!--end::Row-->
+    <div class="separator separator-dashed mb-8"></div>
+
+    <button type="submit" class="btn btn-primary submit">
+        <span class="indicator-label">{{ isset($result->id)? __('Update') :  __('Create')}}</span>
+        <span class="indicator-progress">{{__('Please wait')}}...
+						<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+    </button>
+
+    {!! Form::close() !!}
+
+@endsection
+
