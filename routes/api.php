@@ -26,7 +26,7 @@ Route::group(['namespace' => 'API'], function(){
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::group(['prefix' => 'cities'], function () {
-        Route::Post('/add', [CityController::class, 'store']);
+        Route::Post('/add-city', [CityController::class, 'store']);
         Route::Post('/edit', [CityController::class, 'update']);
         Route::Post('/delete', [CityController::class, 'delete']);
         Route::get('/', [CityController::class, 'index']);
