@@ -45,6 +45,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'social_user',
+        ],
     ],
 
     /*
@@ -73,6 +78,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\UserBk::class,
+        ],
+
+        'social_user' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\SocialUser::class,
         ],
 
         // 'users' => [

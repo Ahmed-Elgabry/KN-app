@@ -253,6 +253,9 @@ return [
         'Datatables' => \Yajra\DataTables\Facades\DataTables::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Jwt' => Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
 
     ])->toArray(),
 
