@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'api',
+        'passwords' => 'social_user',
     ],
 
     /*
@@ -75,10 +75,6 @@ return [
             'model' => App\Models\User::class,
             'table'=> 'user'
         ],
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\UserBk::class,
-        ],
 
         'social_user' => [
             'driver' => 'eloquent',
@@ -110,7 +106,7 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
-            'expire' => 60,
+            'expire' => 60000000,
             'throttle' => 60,
         ],
     ],
@@ -126,6 +122,6 @@ return [
     |
     */
 
-    'password_timeout' => 10800,
+    'password_timeout' => 108000000,
 
 ];

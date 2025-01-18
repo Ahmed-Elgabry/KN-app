@@ -16,10 +16,10 @@ class AuthController extends Controller
 {
     use HelperApi, ImageProcessing;
 
-    public function __construct()
+    /*public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);//login, register methods won't go through the api guard
-    }
+    }*/
     public function login(Request $request)
     {
         try {
