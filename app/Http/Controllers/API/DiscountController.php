@@ -30,12 +30,13 @@ class DiscountController extends Controller
 
     public function userDiscounts()
     {
-        return $this->discountService->userDiscounts();
+        return $this->onSuccess(200, 'Discounts successfully', $this->discountService->userDiscounts());
+
     }
 
     public function cityDiscounts($id)
     {
-        return $this->discountService->cityDiscounts($id);
+        return $this->onSuccess(200, 'Discounts successfully', $this->discountService->cityDiscounts($id)); ;
     }
 
     public function store(Request $request)
