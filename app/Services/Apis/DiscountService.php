@@ -57,6 +57,7 @@ class DiscountService extends BaseService
                 'all_work_hours' => $request->all_work_hours,
                 'from' => $request->from,
                 'to' => $request->to,
+                'city_id' => $request->city_id,
                 'user_id' => auth()->id(),
             ]);
 
@@ -161,6 +162,7 @@ class DiscountService extends BaseService
                 'all_work_hours' => $request->all_work_hours,
                 'from' => $request->from,
                 'to' => $request->to,
+                'city_id' => $request->city_id,
             ], $request->id);
 
             if ($request->image) {

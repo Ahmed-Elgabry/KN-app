@@ -51,6 +51,7 @@ class DiscountController extends Controller
                 'all_work_hours' => 'required',
                 'from' => 'required',
                 'to' => 'required',
+                'city_id' => 'city_id',
             ], [], [
                 'name' => trans('app.name'),
                 'address' => trans('app.address'),
@@ -66,6 +67,7 @@ class DiscountController extends Controller
                 'all_work_hours' => trans('app.all_work_hours'),
                 'from' => trans('app.from'),
                 'to' => trans('app.to'),
+                'city_id' => trans('app.city_id'),
             ]);
             if ($validator->fails()) {
                 $errorString = implode(",", $validator->errors()->all());
@@ -106,6 +108,7 @@ class DiscountController extends Controller
                 'from' => 'required',
                 'to' => 'required',
                 'id' => 'required',
+                'city_id' => 'city_id',
             ], [], [
                 'name' => trans('app.name'),
                 'address' => trans('app.address'),
@@ -122,6 +125,7 @@ class DiscountController extends Controller
                 'from' => trans('app.from'),
                 'to' => trans('app.to'),
                 'id' => trans('app.id'),
+                'city_id' => trans('app.city_id'),
             ]);
             if ($validator->fails()) {
                 $errorString = implode(",", $validator->errors()->all());
