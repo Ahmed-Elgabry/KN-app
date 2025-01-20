@@ -28,4 +28,10 @@ class DiscountRepository extends BaseRepository
         return $this->modeler->where('user_id', auth()->id())->with('mainImage')
             ->with('imageList')->with('products')->with('times')->get();
     }
+
+    public function cityDiscounts($id)
+    {
+        return $this->modeler->where('city_id', $id)->with('mainImage')
+            ->with('imageList')->with('products')->with('times')->get();
+    }
 }

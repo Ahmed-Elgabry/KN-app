@@ -33,6 +33,11 @@ class DiscountController extends Controller
         return $this->discountService->userDiscounts();
     }
 
+    public function cityDiscounts($id)
+    {
+        return $this->discountService->cityDiscounts($id);
+    }
+
     public function store(Request $request)
     {
         try{

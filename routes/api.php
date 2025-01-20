@@ -27,6 +27,7 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/update', [DiscountController::class, 'update']);
             Route::Post('/delete', [DiscountController::class, 'delete']);
             Route::get('/user-discounts', [DiscountController::class, 'userDiscounts']);
+            Route::get('/city-discounts/{id}', [DiscountController::class, 'cityDiscounts']);
             Route::get('/', [DiscountController::class, 'index']);
         });
     });

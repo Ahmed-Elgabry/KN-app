@@ -39,6 +39,11 @@ class DiscountService extends BaseService
         return $this->discountRepository->userDiscounts();
     }
 
+    public function cityDiscounts($id)
+    {
+        return $this->discountRepository->cityDiscounts($id);
+    }
+
     public function store($request)
     {
          DB::beginTransaction();
