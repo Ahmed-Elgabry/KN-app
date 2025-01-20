@@ -51,7 +51,7 @@ class DiscountController extends Controller
                 'all_work_hours' => 'required',
                 'from' => 'required',
                 'to' => 'required',
-                'city_id' => 'city_id',
+                'city_id' => 'required',
             ], [], [
                 'name' => trans('app.name'),
                 'address' => trans('app.address'),
@@ -108,7 +108,7 @@ class DiscountController extends Controller
                 'from' => 'required',
                 'to' => 'required',
                 'id' => 'required',
-                'city_id' => 'city_id',
+                'city_id' => 'required',
             ], [], [
                 'name' => trans('app.name'),
                 'address' => trans('app.address'),
