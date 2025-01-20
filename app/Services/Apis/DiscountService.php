@@ -4,10 +4,12 @@ namespace App\Services\Apis;
 
 use App\Models\BillItems;
 use App\Models\Media;
+use App\Models\Post;
 use App\Models\Type;
 use App\Repositories\DiscountProductsRepository;
 use App\Repositories\DiscountRepository;
 use App\Repositories\DiscountTimesRepository;
+use App\Repositories\PostRepository;
 use App\Services\BaseService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -18,15 +20,17 @@ class DiscountService extends BaseService
     protected $discountRepository;
     protected $discountProductsRepository;
     protected $discountTimesRepository;
+    protected $postRepository;
 
     public function __construct(DiscountRepository $discountRepository,
                                 DiscountProductsRepository $discountProductsRepository,
-                                DiscountTimesRepository $discountTimesRepository)
+                                DiscountTimesRepository $discountTimesRepository, PostRepository $postRepository)
     {
         parent::__construct();
         $this->discountRepository = $discountRepository;
         $this->discountProductsRepository = $discountProductsRepository;
         $this->discountTimesRepository = $discountTimesRepository;
+        $this->postRepository = $postRepository;
     }
 
     public function index()
@@ -48,6 +52,12 @@ class DiscountService extends BaseService
     {
          DB::beginTransaction();
         try {
+            $post = $this->postRepository->store([
+                'user_id' => auth()->id(),
+                'city_id' => $request->city_id,
+                'type' => 'discount',
+            ]);
+
             $store = $this->discountRepository->store([
                 'name' => $request->name,
                 'address' => $request->address,
@@ -64,6 +74,7 @@ class DiscountService extends BaseService
                 'to' => $request->to,
                 'city_id' => $request->city_id,
                 'user_id' => auth()->id(),
+                'post_id' => $post->id,
             ]);
 
             if ($request->image) {

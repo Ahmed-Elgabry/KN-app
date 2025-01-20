@@ -28,7 +28,9 @@ return new class extends Migration
             $table->date('to')->nullable();
             $table->foreignId('user_id')->index();
             $table->foreignId('city_id')->index();
+            $table->foreignId('post_id')->index();
             $table->foreign('user_id')->references('id')->on('social_users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('city_id')->references('id')->on('cities')->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
