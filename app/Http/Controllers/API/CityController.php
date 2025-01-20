@@ -30,19 +30,13 @@ class CityController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name_en' => 'required|string',
-            'name_ar' => 'required|string',
-            'image' => 'required',
-        ]);
-
         try{
             if ($request->image) {
                 $imageName = time() . '.' . request()->image->getClientOriginalExtension();
                 request()->image->move(public_path('images/cities'), $imageName);
                 $city = City::create([
                     'name_en' => $request->name_en,
-                    'name_ar' => $request->name_en,
+                    'name_ar' => $request->name_ar,
                     'image' => $imageName,
                 ]);
             }
@@ -53,13 +47,6 @@ class CityController extends Controller
     }
     public function update(Request $request)
     {
-        $request->validate([
-            'name_en' => 'required|string',
-            'name_ar' => 'required|string',
-            'image' => 'required',
-            'id' => 'required',
-        ]);
-
         try{
             if ($request->image) {
                 $imageName = time() . '.' . request()->image->getClientOriginalExtension();
@@ -67,7 +54,7 @@ class CityController extends Controller
                 $city = City::find($request->id);
                 $city->update([
                     'name_en' => $request->name_en,
-                    'name_ar' => $request->name_en,
+                    'name_ar' => $request->name_ar,
                     'image' => $imageName,
                 ]);
             }
