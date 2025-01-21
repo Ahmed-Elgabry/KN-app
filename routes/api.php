@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\DiscountController;
+use App\Http\Controllers\API\PostActionsController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'API'], function(){
@@ -10,7 +11,7 @@ Route::group(['namespace' => 'API'], function(){
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 
-    Route::group(['middleware' => ['auth:api']], function (){
+    Route::group(['middleware' => ['jwt.verify']], function (){
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/refresh', [AuthController::class, 'refresh']);
 
@@ -29,6 +30,13 @@ Route::group(['namespace' => 'API'], function(){
             Route::get('/user-discounts', [DiscountController::class, 'userDiscounts']);
             Route::get('/city-discounts/{id}', [DiscountController::class, 'cityDiscounts']);
             Route::get('/', [DiscountController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'posts'], function () {
+            Route::Post('/like', [PostActionsController::class, 'like']);
+            Route::Post('/favorite', [PostActionsController::class, 'favorite']);
+            Route::Post('/rate', [PostActionsController::class, 'ratePost']);
+            Route::Post('/delete-rate', [PostActionsController::class, 'deleteRate']);
         });
     });
 });

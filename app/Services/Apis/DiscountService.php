@@ -2,10 +2,7 @@
 
 namespace App\Services\Apis;
 
-use App\Models\BillItems;
 use App\Models\Media;
-use App\Models\Post;
-use App\Models\Type;
 use App\Repositories\DiscountProductsRepository;
 use App\Repositories\DiscountRepository;
 use App\Repositories\DiscountTimesRepository;
@@ -81,22 +78,22 @@ class DiscountService extends BaseService
                 ini_set('memory_limit', '-1');
                 $file = $request->image;
                 $image_path = date("Y-m-d") . '/';
-                    $image_extension = $file->getClientOriginalExtension();
-                    $image_imageName = date('mdYHis') . uniqid() . '.' . $image_extension;
-                    File::makeDirectory(public_path('storage/discount/images/' . $image_path), $mode = 0777, true, true);
-                    Image::make($file)
-                        ->resize(500, null, function ($constraint) {
-                            $constraint->aspectRatio();
-                        })
-                        ->save(public_path('storage/discount/images/' . $image_path) . $image_imageName, 91);
-                    $image = new Media();
-                    $image->filename = $image_imageName;
-                    $image->mime = $file->getClientMimeType();
-                    $image->type = "main_image";
-                    $image->mediaable_id = $store->id;
-                    $image->mediaable_type = 'App\Models\Discount';
-                    $image->url = url('') . '/storage/discount/images/' . $image_path . $image_imageName;
-                    $image->save();
+                $image_extension = $file->getClientOriginalExtension();
+                $image_imageName = date('mdYHis') . uniqid() . '.' . $image_extension;
+                File::makeDirectory(public_path('storage/discount/images/' . $image_path), $mode = 0777, true, true);
+                Image::make($file)
+                    ->resize(500, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })
+                    ->save(public_path('storage/discount/images/' . $image_path) . $image_imageName, 91);
+                $image = new Media();
+                $image->filename = $image_imageName;
+                $image->mime = $file->getClientMimeType();
+                $image->type = "main_image";
+                $image->mediaable_id = $store->id;
+                $image->mediaable_type = 'App\Models\Discount';
+                $image->url = url('') . '/storage/discount/images/' . $image_path . $image_imageName;
+                $image->save();
             }
 
             if ($request->image_list) {

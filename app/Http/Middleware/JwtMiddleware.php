@@ -39,6 +39,7 @@ class JwtMiddleware
     public function responseWarning($message, $code)
     {
         return response([
+            "status" => $code,
             "success" => false,
             "message" => $message,
         ], $code);

@@ -9,7 +9,6 @@ use App\Models\City;
 use App\Services\Apis\DiscountService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class DiscountController extends Controller
 {
@@ -19,7 +18,6 @@ class DiscountController extends Controller
 
     public function __construct(DiscountService $discountService)
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
         $this->discountService = $discountService;
     }
 
@@ -30,13 +28,21 @@ class DiscountController extends Controller
 
     public function userDiscounts()
     {
-        return $this->onSuccess(200, 'Discounts successfully', $this->discountService->userDiscounts());
+        $discounts = $this->discountService->userDiscounts();
+        if (empty($discounts)){
+            return $this->onSuccess(201, 'Discounts successfully', $discounts);
+        }
+        return $this->onSuccess(200, 'Discounts successfully', $discounts);
 
     }
 
     public function cityDiscounts($id)
     {
-        return $this->onSuccess(200, 'Discounts successfully', $this->discountService->cityDiscounts($id)); ;
+        $discounts = $this->discountService->cityDiscounts($id);
+        if (empty($discounts)){
+            return $this->onSuccess(201, 'Discounts successfully', $discounts);
+        }
+        return $this->onSuccess(200, 'Discounts successfully', $discounts);
     }
 
     public function store(Request $request)
@@ -92,7 +98,11 @@ class DiscountController extends Controller
 
     public function edit($id)
     {
-        return $this->discountService->edit($id);
+        $discounts = $this->discountService->edit($id);
+        if (empty($discounts)){
+            return $this->onSuccess(201, 'Discounts successfully', $discounts);
+        }
+        return $this->onSuccess(200, 'Discounts successfully', $discounts);
     }
 
     public function update(Request $request)
