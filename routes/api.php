@@ -37,6 +37,13 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/favorite', [PostActionsController::class, 'favorite']);
             Route::Post('/rate', [PostActionsController::class, 'ratePost']);
             Route::Post('/delete-rate', [PostActionsController::class, 'deleteRate']);
+            Route::group(['prefix' => 'comments'], function () {
+                Route::Post('/add', [PostActionsController::class, 'comment']);
+                Route::Post('/replay', [PostActionsController::class, 'replayComment']);
+                Route::Post('/delete', [PostActionsController::class, 'deleteComment']);
+                Route::Post('/like', [PostActionsController::class, 'likeComment']);
+                Route::get('/{id}', [PostActionsController::class, 'comments']);
+            });
         });
     });
 });

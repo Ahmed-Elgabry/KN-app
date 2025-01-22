@@ -135,4 +135,131 @@ class PostActionsController extends Controller
             return $this->onError(500, trans('site.server_error'), $error->getMessage());
         }
     }
+
+    public function comment(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'post_id' => 'required',
+                'post_user_id' => 'required',
+                'content' => 'required',
+
+            ], [], [
+                'post_id' => trans('app.post_id'),
+                'post_user_id' => trans('app.post_user_id'),
+                'content' => trans('app.content'),
+            ]);
+            if ($validator->fails()) {
+                $errorString = implode(",", $validator->errors()->all());
+                return response([
+                    "success" => false,
+                    "message" => $errorString
+                ], 400);
+            }
+
+            $comment = $this->postActionsService->comment($request);
+            if ($comment){
+                return $this->onSuccess(200, 'post comment added successfully', $comment);
+            }
+            return $this->onSuccess(200, 'post comment not added', $comment);
+        } catch (\Throwable $error) {
+            return $this->onError(500, trans('site.server_error'), $error->getMessage());
+        }
+    }
+    public function comments($id)
+    {
+        try{
+            $comments = $this->postActionsService->comments($id);
+            if ($comments){
+                return $this->onSuccess(200, 'post comments successfully', $comments);
+            }
+            return $this->onSuccess(201, 'post comments ', $comments);
+        } catch (\Throwable $error) {
+            return $this->onError(500, trans('site.server_error'), $error->getMessage());
+        }
+    }
+    public function replayComment(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'post_id' => 'required',
+                'post_user_id' => 'required',
+                'content' => 'required',
+                'parent_id' => 'required',
+
+            ], [], [
+                'post_id' => trans('app.post_id'),
+                'post_user_id' => trans('app.post_user_id'),
+                'content' => trans('app.content'),
+                'parent_id' => trans('app.parent_id'),
+            ]);
+            if ($validator->fails()) {
+                $errorString = implode(",", $validator->errors()->all());
+                return response([
+                    "success" => false,
+                    "message" => $errorString
+                ], 400);
+            }
+
+            $comment = $this->postActionsService->replayComment($request);
+            if ($comment){
+                return $this->onSuccess(200, 'post comment added successfully', $comment);
+            }
+            return $this->onSuccess(200, 'post comment not added', $comment);
+        } catch (\Throwable $error) {
+            return $this->onError(500, trans('site.server_error'), $error->getMessage());
+        }
+    }
+
+    public function deleteComment(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'id' => 'required',
+            ], [], [
+                'id' => trans('app.id'),
+            ]);
+            if ($validator->fails()) {
+                $errorString = implode(",", $validator->errors()->all());
+                return response([
+                    "success" => false,
+                    "message" => $errorString
+                ], 400);
+            }
+
+            $comment = $this->postActionsService->deleteComment($request);
+            if ($comment){
+                return $this->onSuccess(200, 'post comment deleted successfully', $comment);
+            }
+            return $this->onSuccess(200, 'post comment not deleted', $comment);
+        } catch (\Throwable $error) {
+            return $this->onError(500, trans('site.server_error'), $error->getMessage());
+        }
+    }
+
+    public function likeComment(Request $request)
+    {
+        try{
+            $validator = Validator::make($request->all(), [
+                'comment_id' => 'required',
+            ], [], [
+                'comment_id' => trans('app.comment_id'),
+            ]);
+            if ($validator->fails()) {
+                $errorString = implode(",", $validator->errors()->all());
+                return response([
+                    "success" => false,
+                    "message" => $errorString
+                ], 400);
+            }
+
+            $like = $this->postActionsService->likeComment($request);
+            if ($like){
+                return $this->onSuccess(200, 'comment Liked successfully', $like);
+            }
+            return $this->onSuccess(200, 'comment not Liked', $like);
+        } catch (\Throwable $error) {
+            return $this->onError(500, trans('site.server_error'), $error->getMessage());
+        }
+    }
 }
