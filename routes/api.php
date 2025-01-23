@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\DiscountController;
+use App\Http\Controllers\API\GiftsController;
 use App\Http\Controllers\API\PostActionsController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,14 @@ Route::group(['namespace' => 'API'], function(){
             Route::get('/user-discounts', [DiscountController::class, 'userDiscounts']);
             Route::get('/city-discounts/{id}', [DiscountController::class, 'cityDiscounts']);
             Route::get('/', [DiscountController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'gifts'], function () {
+            Route::Post('/store', [GiftsController::class, 'store']);
+            Route::get('/edit/{id}', [GiftsController::class, 'edit']);
+            Route::Post('/update', [GiftsController::class, 'update']);
+            Route::Post('/delete', [GiftsController::class, 'delete']);
+            Route::get('/', [GiftsController::class, 'index']);
         });
 
         Route::group(['prefix' => 'posts'], function () {
