@@ -5,6 +5,7 @@ use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\DiscountController;
 use App\Http\Controllers\API\GiftsController;
 use App\Http\Controllers\API\PostActionsController;
+use App\Http\Controllers\API\WalletController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'API'], function(){
@@ -39,6 +40,12 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/update', [GiftsController::class, 'update']);
             Route::Post('/delete', [GiftsController::class, 'delete']);
             Route::get('/', [GiftsController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'wallets'], function () {
+            Route::Post('/increase-wallet', [WalletController::class, 'increaseWallet']);
+            Route::Post('/decrease-wallet', [WalletController::class, 'decreaseWallet']);
+            Route::Post('/create-wallet', [WalletController::class, 'createWallet']);
         });
 
         Route::group(['prefix' => 'posts'], function () {
