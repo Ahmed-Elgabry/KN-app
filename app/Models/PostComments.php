@@ -22,4 +22,10 @@ class PostComments extends GlobalModel
 
     }
 
+    public function gifts()
+    {
+        return $this->hasMany(Gift::class, 'gift_id', 'id');
+
+    }
+
 }

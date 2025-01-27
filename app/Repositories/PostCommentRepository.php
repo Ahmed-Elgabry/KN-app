@@ -16,6 +16,7 @@ class PostCommentRepository extends BaseRepository
         return $this->modeler->where('post_id', $id)->where('parent_id', null)
             ->with('replays')
             ->with('likes')
+            ->with('gifts')
             ->get();
     }
 

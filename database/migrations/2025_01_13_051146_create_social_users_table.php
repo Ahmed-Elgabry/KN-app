@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('password');
             $table->string('city')->nullable();
+            $table->string('code')->index();
             $table->softDeletes();
             $table->timestamps();
         });

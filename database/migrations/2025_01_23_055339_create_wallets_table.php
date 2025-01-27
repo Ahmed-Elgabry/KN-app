@@ -16,10 +16,11 @@ return new class extends Migration
             $table->foreignId('user_id')->index();
             $table->string('name');
             $table->double('total', 8, 3);
+            $table->boolean('status')->default(0);
+            $table->string('password')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('social_users')->onUpdate('cascade')->onDelete('cascade');
-
         });
     }
 

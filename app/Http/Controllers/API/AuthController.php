@@ -64,6 +64,7 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'city' => $request->city,
+                'code' => $this->generateUniqueKey(),
                 'password' => Hash::make($request->password),
             ]);
             $token = JWTAuth::fromUser($user);
@@ -96,5 +97,30 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60000 //mention the guard name inside the auth fn
         ]);
+    }
+
+    public function generateUniqueKey() {
+        $unique = false;
+        $key = '';
+        $keyLength = rand(4, 5);
+        while (!$unique) {
+            $key = $this->generateRandomString($keyLength);
+            $user = SocialUser::where('code', $key)->first();
+            if (!$user) {
+                $unique = true;
+            }
+        }
+
+        return $key;
+    }
+    public function generateRandomString($length) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomIndex = rand(0, $charactersLength - 1);
+            $randomString .= $characters[$randomIndex];
+        }
+        return $randomString;
     }
 }

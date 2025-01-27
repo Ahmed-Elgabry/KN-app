@@ -124,6 +124,7 @@ class PostActionsService extends BaseService
                     'post_id' => $request->post_id,
                     'post_user_id' => $request->post_user_id,
                     'content' => $request->content,
+                    'gift_id' => $request->gift_id ?? null,
                 ]);
             DB::commit();
             return $comment;
@@ -143,6 +144,7 @@ class PostActionsService extends BaseService
                     'post_user_id' => $request->post_user_id,
                     'content' => $request->content,
                     'parent_id' => $request->parent_id,
+                    'gift_id' => $request->gift_id ?? null,
                 ]);
             DB::commit();
             return $comment;

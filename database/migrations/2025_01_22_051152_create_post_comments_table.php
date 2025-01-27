@@ -17,9 +17,11 @@ return new class extends Migration
             $table->foreignId('post_id')->index();
             $table->foreignId('post_user_id')->index();
             $table->foreignId('parent_id')->nullable()->index();
+            $table->foreignId('gift_id')->nullable()->index();
             $table->text('content')->nullable();
             $table->softDeletes();
             $table->timestamps();
+            $table->foreign('gift_id')->references('id')->on('gifts')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('social_users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('post_id')->references('id')->on('posts')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('post_user_id')->references('id')->on('social_users')->onUpdate('cascade')->onDelete('cascade');
