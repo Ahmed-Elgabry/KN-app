@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CityController;
+use App\Http\Controllers\API\CraftController;
 use App\Http\Controllers\API\DiscountController;
 use App\Http\Controllers\API\GiftsController;
 use App\Http\Controllers\API\PostActionsController;
@@ -40,6 +41,14 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/update', [GiftsController::class, 'update']);
             Route::Post('/delete', [GiftsController::class, 'delete']);
             Route::get('/', [GiftsController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'crafts'], function () {
+            Route::Post('/store', [CraftController::class, 'store']);
+            Route::get('/edit/{id}', [CraftController::class, 'edit']);
+            Route::Post('/update', [CraftController::class, 'update']);
+            Route::Post('/delete', [CraftController::class, 'delete']);
+            Route::get('/', [CraftController::class, 'index']);
         });
 
         Route::group(['prefix' => 'wallets'], function () {
