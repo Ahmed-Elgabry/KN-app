@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AdPlanController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\CraftController;
@@ -49,6 +50,14 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/update', [CraftController::class, 'update']);
             Route::Post('/delete', [CraftController::class, 'delete']);
             Route::get('/', [CraftController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'ad-plans'], function () {
+            Route::Post('/store', [AdPlanController::class, 'store']);
+            Route::get('/edit/{id}', [AdPlanController::class, 'edit']);
+            Route::Post('/update', [AdPlanController::class, 'update']);
+            Route::Post('/delete', [AdPlanController::class, 'delete']);
+            Route::get('/', [AdPlanController::class, 'index']);
         });
 
         Route::group(['prefix' => 'wallets'], function () {
