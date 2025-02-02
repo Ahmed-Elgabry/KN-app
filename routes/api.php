@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\CraftController;
 use App\Http\Controllers\API\DiscountController;
+use App\Http\Controllers\API\EmploymentController;
 use App\Http\Controllers\API\GiftsController;
 use App\Http\Controllers\API\PostActionsController;
 use App\Http\Controllers\API\WalletController;
@@ -58,6 +59,14 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/update', [AdPlanController::class, 'update']);
             Route::Post('/delete', [AdPlanController::class, 'delete']);
             Route::get('/', [AdPlanController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'employments'], function () {
+            Route::Post('/store', [EmploymentController::class, 'store']);
+            Route::get('/edit/{id}', [EmploymentController::class, 'edit']);
+            Route::Post('/update', [EmploymentController::class, 'update']);
+            Route::Post('/delete', [EmploymentController::class, 'delete']);
+            Route::get('/', [EmploymentController::class, 'index']);
         });
 
         Route::group(['prefix' => 'wallets'], function () {
