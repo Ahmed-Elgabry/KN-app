@@ -29,7 +29,7 @@ class EmploymentService extends BaseService
 
     public function index()
     {
-        return $this->employmentRepository->get();
+        return $this->employmentRepository->getAllData();
     }
 
     public function store($request)
@@ -92,7 +92,7 @@ class EmploymentService extends BaseService
 
     public function edit($id)
     {
-        return $this->employmentRepository->find($id);
+        return $this->employmentRepository->getData($id);
     }
 
     public function update($request)
@@ -150,5 +150,15 @@ class EmploymentService extends BaseService
     public function delete($request)
     {
         return  $this->employmentRepository->destroy($request->id);
+    }
+
+    public function userEmployment()
+    {
+        return $this->employmentRepository->userEmployment();
+    }
+
+    public function cityEmployment($id)
+    {
+        return $this->employmentRepository->cityEmployment($id);
     }
 }

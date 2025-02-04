@@ -66,6 +66,8 @@ Route::group(['namespace' => 'API'], function(){
             Route::get('/edit/{id}', [EmploymentController::class, 'edit']);
             Route::Post('/update', [EmploymentController::class, 'update']);
             Route::Post('/delete', [EmploymentController::class, 'delete']);
+            Route::get('/user-employment', [EmploymentController::class, 'userEmployment']);
+            Route::get('/city-employment/{id}', [EmploymentController::class, 'cityEmployment']);
             Route::get('/', [EmploymentController::class, 'index']);
         });
 

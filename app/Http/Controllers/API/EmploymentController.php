@@ -129,6 +129,24 @@ class EmploymentController extends Controller
         } catch (\Throwable $error) {
             return $this->onError(500, trans('site.server_error'), $error->getMessage());
         }
+    }
 
+    public function userEmployment()
+    {
+        $discounts = $this->employmentService->userEmployment();
+        if (empty($discounts)){
+            return $this->onSuccess(201, 'user Employment successfully', $discounts);
+        }
+        return $this->onSuccess(200, 'user Employment successfully', $discounts);
+
+    }
+
+    public function cityEmployment($id)
+    {
+        $discounts = $this->employmentService->cityEmployment($id);
+        if (empty($discounts)){
+            return $this->onSuccess(201, 'city Employment successfully', $discounts);
+        }
+        return $this->onSuccess(200, 'city Employment successfully', $discounts);
     }
 }

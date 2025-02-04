@@ -71,7 +71,7 @@ class LoginController extends SystemController
 
             $secret = $user_query->two_fa_secret;
 
-            $qrCodeUrl = $ga->getQRCode($secret, 'Niceone-wms', $user_query->email);
+            $qrCodeUrl = $ga->getQRCode($secret, 'KN', $user_query->email);
 
             return $this->success(__('Enter Code'),
                 ['first_time' => empty($user_query->two_fa_secret) ? 1 : 0,'qrCodeUrl' => $qrCodeUrl,'email' => $user_query->email]);
