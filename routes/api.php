@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AdPlanController;
+use App\Http\Controllers\API\ApprovalWalletRequestController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\CraftController;
@@ -79,5 +80,7 @@ Route::group(['namespace' => 'API'], function(){
                 Route::get('/{id}', [PostActionsController::class, 'comments']);
             });
         });
+
+        Route::resource('approvalWalletRequest' , ApprovalWalletRequestController::class);
     });
 });
