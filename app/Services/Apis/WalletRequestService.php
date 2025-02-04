@@ -2,21 +2,21 @@
 
 namespace App\Services\Apis;
 
-use App\Repositories\ApprovalWalletRequestRepository;
+use App\Repositories\WalletRequestRepository;
 use App\Services\BaseService;
 use Illuminate\Support\Facades\DB;
 
-class ApprovalWalletRequestService extends BaseService
+class WalletRequestService extends BaseService
 {
-    protected ApprovalWalletRequestRepository $ApprovalWalletRequestRepository;
+    protected WalletRequestRepository $WalletRequestRepository;
 
-    public function __construct(ApprovalWalletRequestRepository $ApprovalWalletRequestRepository) {
-        $this->ApprovalWalletRequestRepository = $ApprovalWalletRequestRepository;
+    public function __construct(WalletRequestRepository $WalletRequestRepository) {
+        $this->WalletRequestRepository = $WalletRequestRepository;
     }
 
     public function index()
     {
-        return $this->ApprovalWalletRequestRepository->get();
+        return $this->WalletRequestRepository->get();
     }
 
     public function store($request)
@@ -31,7 +31,7 @@ class ApprovalWalletRequestService extends BaseService
                 $id_card_image = time() . '.' . request()->id_card_image->getClientOriginalExtension();
                 request()->id_card_image->move(public_path('images/ApprovalWalletRequest'), $id_card_image);
 
-                $store = $this->ApprovalWalletRequestRepository->store([
+                $store = $this->WalletRequestRepository->store([
                     'user_id' => $request->user_id,
                     'user_image' => $user_image,
                     'id_card_image' => $id_card_image
@@ -39,7 +39,7 @@ class ApprovalWalletRequestService extends BaseService
             }
 
             DB::commit();
-            return $this->ApprovalWalletRequestRepository->find($store->id);
+            return $this->WalletRequestRepository->find($store->id);
         } catch (\Exception $e) {
             DB::rollback();
             errorLog($e->getMessage());
@@ -50,7 +50,7 @@ class ApprovalWalletRequestService extends BaseService
 
     public function edit($id)
     {
-        return $this->ApprovalWalletRequestRepository->find($id);
+        return $this->WalletRequestRepository->find($id);
     }
 
     public function update($request , $id)
@@ -58,7 +58,7 @@ class ApprovalWalletRequestService extends BaseService
         DB::beginTransaction();
 
         try {
-            $approvalRequest = $this->ApprovalWalletRequestRepository->find($id);
+            $approvalRequest = $this->WalletRequestRepository->find($id);
 
             if ( $request->hasFile('user_image') ){
 
@@ -81,7 +81,7 @@ class ApprovalWalletRequestService extends BaseService
                 $request->id_card_image->move(public_path('images/ApprovalWalletRequest'), $id_card_image);
             }
 
-            $this->ApprovalWalletRequestRepository->update([
+            $this->WalletRequestRepository->update([
                 'user_id' => $request->user_id,
                 'user_image' => $user_image,
                 'id_card_image' => $id_card_image,
@@ -89,7 +89,7 @@ class ApprovalWalletRequestService extends BaseService
             ], $id);
 
             DB::commit();
-            return $this->ApprovalWalletRequestRepository->find($id);
+            return $this->WalletRequestRepository->find($id);
         } catch (\Exception $e) {
 
             DB::rollBack();
@@ -102,7 +102,7 @@ class ApprovalWalletRequestService extends BaseService
 
     public function destroy($request)
     {
-        return  $this->ApprovalWalletRequestRepository->destroy($request->id);
+        return  $this->WalletRequestRepository->destroy($request->id);
     }
 
 }

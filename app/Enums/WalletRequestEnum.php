@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ApprovalWalletRequestEnum: string
+enum WalletRequestEnum: string
 {
     case STATUS_PENDIND = "pending" ;
     case STATUS_Accepted = "approved" ;

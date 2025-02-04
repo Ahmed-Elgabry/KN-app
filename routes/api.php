@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AdPlanController;
-use App\Http\Controllers\API\ApprovalWalletRequestController;
+use App\Http\Controllers\API\WalletRequestController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\CraftController;
@@ -65,6 +65,7 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/increase-wallet', [WalletController::class, 'increaseWallet']);
             Route::Post('/decrease-wallet', [WalletController::class, 'decreaseWallet']);
             Route::Post('/create-wallet', [WalletController::class, 'createWallet']);
+            Route::Post('/store-wallet-request', [WalletRequestController::class, 'store']);
         });
 
         Route::group(['prefix' => 'posts'], function () {
@@ -81,6 +82,5 @@ Route::group(['namespace' => 'API'], function(){
             });
         });
 
-        Route::resource('approvalWalletRequest' , ApprovalWalletRequestController::class);
     });
 });

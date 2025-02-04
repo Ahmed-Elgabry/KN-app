@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class ApprovalWalletRequest extends GlobalModel
+class WalletRequest extends GlobalModel
 {
 
     protected $table = 'approval_wallet_requests';
