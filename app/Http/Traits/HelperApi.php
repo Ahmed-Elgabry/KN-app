@@ -7,7 +7,6 @@ use Illuminate\Http\JsonResponse;
 trait HelperApi
 {
 
-
     protected function onError(int $code, string $message = '', $error = null)
     {
         return response()->json([

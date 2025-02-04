@@ -34,7 +34,9 @@ class PostActionsService extends BaseService
 
     public function like($request)
     {
-        DB::beginTransaction();
+        DB::transaction(function () {
+            
+        });();
         try {
             $status = false;
             $like = $this->postLikeRepository->getFirstWhere(['user_id' => auth()->id(), 'post_id' => $request->post_id]);

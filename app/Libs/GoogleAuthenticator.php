@@ -102,11 +102,11 @@ class GoogleAuthenticator
      */
     public function getQRCode($secret, $title = null,$email=null)
     {
+
         $urlencoded = urlencode('otpauth://totp/'.$email.'?secret='.$secret.'');
         if (isset($title)) {
             $urlencoded .= urlencode('&issuer='.urlencode($title));
         }
-
 
         return  $urlencoded;
     }
