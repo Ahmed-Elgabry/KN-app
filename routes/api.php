@@ -65,7 +65,10 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/increase-wallet', [WalletController::class, 'increaseWallet']);
             Route::Post('/decrease-wallet', [WalletController::class, 'decreaseWallet']);
             Route::Post('/create-wallet', [WalletController::class, 'createWallet']);
-            Route::Post('/store-wallet-request', [WalletRequestController::class, 'store']);
+        });
+
+        Route::group(['prefix' => 'wallet-request'], function () {
+            Route::Post('/store', [WalletRequestController::class, 'store']);
         });
 
         Route::group(['prefix' => 'posts'], function () {

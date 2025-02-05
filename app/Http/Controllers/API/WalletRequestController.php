@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RequestsWalletRequest;
 use App\Http\Traits\{ HelperApi , ImageProcessing };
 use App\Models\WalletRequest;
 use App\Services\Apis\WalletRequestService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class WalletRequestController extends Controller
 {
@@ -35,9 +36,28 @@ class WalletRequestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RequestsWalletRequest $request)
+    public function store(Request $request)
     {
         try{
+
+            $validator = Validator::make($request->all(), [
+                'social_user_id' => 'required|int|exists:social_users,id',
+                'user_image' => 'required|image:jpeg,png,jpg',
+                'id_card_image' => 'required|image:jpeg,png,jpg'
+            ], [], [
+                'social_user_id' => trans('app.user_id'),
+                'user_image' => trans('app.user_image'),
+                'id_card_image' => trans('app.id_card_image')
+            ]);
+
+            if ($validator->fails()) {
+                $errorString = implode(",", $validator->errors()->all());
+                return response([
+                    "success" => false,
+                    "message" => $errorString
+                ], 400);
+            }
+
             $WalletRequest = $this->WalletRequestService->store($request);
             return $this->onSuccess(200, 'Approval Wallet Request Send successfully', $WalletRequest);
         } catch (\Throwable $error) {
@@ -49,7 +69,7 @@ class WalletRequestController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(WalletRequest $WalletRequest)
+    public function edit(Request $WalletRequest)
     {
         $WalletRequest = $this->WalletRequestService->edit($WalletRequest?->id);
         if (empty($WalletRequest)){
@@ -61,9 +81,28 @@ class WalletRequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RequestsWalletRequest $request, WalletRequest $WalletRequest)
+    public function update(Request $request, WalletRequest $WalletRequest)
     {
         try{
+
+            $validator = Validator::make($request->all(), [
+                'social_user_id' => 'required|int|exists:social_users,id',
+                'user_image' => 'required|image:jpeg,png,jpg',
+                'id_card_image' => 'required|image:jpeg,png,jpg'
+            ], [], [
+                'social_user_id' => trans('app.user_id'),
+                'user_image' => trans('app.user_image'),
+                'id_card_image' => trans('app.id_card_image')
+            ]);
+
+            if ($validator->fails()) {
+                $errorString = implode(",", $validator->errors()->all());
+                return response([
+                    "success" => false,
+                    "message" => $errorString
+                ], 400);
+            }
+
             $WalletRequest = $this->WalletRequestService->update($request , $WalletRequest);
             return $this->onSuccess(200, 'approval Wallet Request', $WalletRequest);
         } catch (\Throwable $error) {

@@ -5,7 +5,7 @@ namespace App\Models;
 class WalletRequest extends GlobalModel
 {
 
-    protected $table = 'approval_wallet_requests';
+    protected $table = 'wallet_requests';
     protected $fillable = [ 'social_user_id', 'status' ];
 
     public function socialUser()

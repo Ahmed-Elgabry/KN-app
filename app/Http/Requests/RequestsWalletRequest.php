@@ -22,7 +22,7 @@ class RequestsWalletRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|int|exists:users,id',
+            'social_user_id' => 'required|int|exists:social_users,id',
             'user_image' => 'required|image:jpeg,png,jpg',
             'id_card_image' => 'required|image:jpeg,png,jpg'
         ];
@@ -31,9 +31,9 @@ class RequestsWalletRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'User ID is required',
-            'user_id.int' => 'User ID must be an integer',
-            'user_id.exists' => 'User ID does not exist',
+            'social_user_id.required' => 'User ID is required',
+            'social_user_id.int' => 'User ID must be an integer',
+            'social_user_id.exists' => 'User ID does not exist',
             'user_image.required' => 'User image is required',
             'user_image.image' => 'User image must be a jpeg, png, or jpg',
             'id_card_image.required' => 'ID card image is required',

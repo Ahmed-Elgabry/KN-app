@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('approval_wallet_requests', function (Blueprint $table) {
+        Schema::create('wallet_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('social_user_id')->constrained('social_users')->cascadeOnDelete();
             $table->enum('status', ['pending', 'approved', 'rejected' , 'blocked'])->default('pending');
