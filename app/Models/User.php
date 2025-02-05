@@ -63,9 +63,4 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class, 'department_id');
     }
 
-    public function userLogs()
-    {
-        return $this->hasOne(ApprovalWalletRequest::class, 'user_id', 'id');
-    }
-
 }

@@ -50,4 +50,9 @@ class SocialUser extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function walletRequest()
+    {
+        return $this->hasOne(WalletRequest::class, 'social_user_id', 'id');
+    }
 }

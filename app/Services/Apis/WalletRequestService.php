@@ -2,9 +2,12 @@
 
 namespace App\Services\Apis;
 
+use App\Models\{ Media , WalletRequest };
 use App\Repositories\WalletRequestRepository;
 use App\Services\BaseService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class WalletRequestService extends BaseService
 {
@@ -25,17 +28,51 @@ class WalletRequestService extends BaseService
 
         try {
 
-            if ($request->user_id AND $request->user_image AND $request->id_card_image) {
-                $user_image = time() . '.' . request()->user_image->getClientOriginalExtension();
-                request()->user_image->move(public_path('images/ApprovalWalletRequest'), $user_image);
-                $id_card_image = time() . '.' . request()->id_card_image->getClientOriginalExtension();
-                request()->id_card_image->move(public_path('images/ApprovalWalletRequest'), $id_card_image);
+            if ($request->social_user_id AND $request->user_image AND $request->id_card_image) {
 
                 $store = $this->WalletRequestRepository->store([
-                    'user_id' => $request->user_id,
-                    'user_image' => $user_image,
-                    'id_card_image' => $id_card_image
+                    'social_user_id' => $request->social_user_id,
                 ]);
+
+                ini_set('memory_limit', '-1');
+                $user_image = $request->user_image;
+                $image_path = date("Y-m-d") . '/';
+                $imageName_user_image = date('mdYHis') . uniqid() . '.' . $user_image->getClientOriginalExtension();
+
+                File::makeDirectory(public_path('storage/walletRequest/images/' . $image_path), $mode = 0777, true, true);
+                Image::make($user_image)
+                    ->resize(500, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })
+                    ->save(public_path('storage/walletRequest/images/' . $image_path) . $imageName_user_image, 91);
+
+                Media::create([
+                    'filename' =>  $imageName_user_image,
+                    'mime' => $user_image->getClientMimeType(),
+                    'type' => 'user_image',
+                    'mediaable_id' => $store->id,
+                    'mediaable_type' => WalletRequest::class,
+                    'url' => url('') . '/storage/walletRequest/images/' . $image_path . $imageName_user_image
+                ]);
+
+                $id_card_image = $request->id_card_image;
+                $imageName_id_card_image = date('mdYHis') . uniqid() . '.' . $id_card_image->getClientOriginalExtension();
+
+                Image::make($id_card_image)
+                    ->resize(500, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })
+                    ->save(public_path('storage/walletRequest/images/' . $image_path) . $imageName_id_card_image, 91);
+
+                Media::create([
+                    'filename' =>  $id_card_image,
+                    'mime' => $user_image->getClientMimeType(),
+                    'type' => 'id_card_image',
+                    'mediaable_id' => $store->id,
+                    'mediaable_type' => WalletRequest::class,
+                    'url' => url('') . '/storage/walletRequest/images/' . $image_path . $imageName_id_card_image
+                ]);
+
             }
 
             DB::commit();
@@ -59,32 +96,79 @@ class WalletRequestService extends BaseService
 
         try {
             $approvalRequest = $this->WalletRequestRepository->find($id);
+            $image_path = date("Y-m-d") . '/';
 
-            if ( $request->hasFile('user_image') ){
+            ini_set('memory_limit', '-1');
 
-                if (file_exists('images/ApprovalWalletRequest/' . $approvalRequest->user_image)) {
-                    unlink(public_path('images/ApprovalWalletRequest/' . $approvalRequest->user_image));
+            if ( $request->hasFile($request->user_image) ) {
+
+                $user_image = $request->user_image;
+
+                $oldMedia = Media::when($approvalRequest?->id , function($q) use ($approvalRequest) {
+                    $q->where('mediaable_id' , $approvalRequest->id)
+                        ->where('type' , 'user_image')
+                        ->first();
+                });
+
+                if ($oldMedia AND file_exists('storage/walletRequest/images/' . $oldMedia->filename)) {
+                    unlink(public_path('storage/walletRequest/images/' . $oldMedia->filename));
                 }
 
-                $user_image = time() . '.' . $request->user_image->getClientOriginalExtension();
-                $request->user_image->move(public_path('images/ApprovalWalletRequest'), $user_image);
+                $imageName_user_image = date('mdYHis') . uniqid() . '.' . $user_image->getClientOriginalExtension();
+                Image::make($imageName_user_image)
+                    ->resize(500, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })
+                    ->save(public_path('storage/walletRequest/images/' . $image_path) . $imageName_user_image, 91);
+
+                Media::updateOrCreate([
+                    'id' => $oldMedia->id
+                ], [
+                    'filename' =>  $imageName_user_image,
+                    'mime' => $user_image->getClientMimeType(),
+                    'type' => 'user_image',
+                    'mediaable_id' => $approvalRequest->id,
+                    'mediaable_type' => WalletRequest::class,
+                    'url' => url('') . '/storage/walletRequest/images/' . $image_path . $imageName_user_image
+                ]);
 
             }
 
-            if ( $request->hasFile('id_card_image')) {
+            if ( $request->hasFile($request->id_card_image) ) {
+                $id_card_image = $request->id_card_image;
 
-                if (file_exists('images/ApprovalWalletRequest/' . $approvalRequest->id_card_image)) {
-                    unlink(public_path('images/ApprovalWalletRequest/' . $approvalRequest->id_card_image));
+                $oldMedia = Media::when($approvalRequest?->id , function($q) use ($approvalRequest) {
+                    $q->where('mediaable_id' , $approvalRequest->id)
+                        ->where('type' , 'id_card_image')
+                        ->first();
+                });
+
+                if ($oldMedia AND file_exists('storage/walletRequest/images/' . $oldMedia->filename)) {
+                    unlink(public_path('storage/walletRequest/images/' . $oldMedia->filename));
                 }
 
-                $id_card_image = time() . '.' . $request->id_card_image->getClientOriginalExtension();
-                $request->id_card_image->move(public_path('images/ApprovalWalletRequest'), $id_card_image);
+                $imageName_id_card_image = date('mdYHis') . uniqid() . '.' . $id_card_image->getClientOriginalExtension();
+                Image::make($imageName_id_card_image)
+                    ->resize(500, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })
+                    ->save(public_path('storage/walletRequest/images/' . $image_path) . $imageName_id_card_image, 91);
+
+                Media::updateOrCreate([
+                    'id' => $oldMedia->id
+                ], [
+                    'filename' =>  $imageName_id_card_image,
+                    'mime' => $id_card_image->getClientMimeType(),
+                    'type' => 'id_card_image',
+                    'mediaable_id' => $approvalRequest->id,
+                    'mediaable_type' => WalletRequest::class,
+                    'url' => url('') . '/storage/walletRequest/images/' . $image_path . $imageName_id_card_image
+                ]);
             }
+
 
             $this->WalletRequestRepository->update([
-                'user_id' => $request->user_id,
-                'user_image' => $user_image,
-                'id_card_image' => $id_card_image,
+                'social_user_id' => $request->social_user_id,
                 'status' => $request->status,
             ], $id);
 
@@ -102,7 +186,31 @@ class WalletRequestService extends BaseService
 
     public function destroy($request)
     {
-        return  $this->WalletRequestRepository->destroy($request->id);
+        $mediaUserImage = Media::when($request , function ($q) use ($request) {
+            $q->where('mediaable_id' , $request->id)
+                ->where('type' , 'user_image')
+                ->first();
+        });
+
+        if ($mediaUserImage) {
+            if (file_exists('storage/walletRequest/images/' . $mediaUserImage->filename))
+                unlink(public_path('storage/walletRequest/images/' . $mediaUserImage->filename));
+                $mediaUserImage->delete();
+        }
+
+        $mediaIdCardImage = Media::when($request , function ($q) use ($request) {
+            $q->where('mediaable_id' , $request->id)
+                ->where('type' , 'id_card_image')
+                ->first();
+        });
+
+        if ($mediaIdCardImage) {
+            if (file_exists('storage/walletRequest/images/' . $mediaIdCardImage->filename))
+                unlink(public_path('storage/walletRequest/images/' . $mediaIdCardImage->filename));
+                $mediaIdCardImage->delete();
+        }
+
+        return $this->WalletRequestRepository->destroy($request->id);
     }
 
 }
