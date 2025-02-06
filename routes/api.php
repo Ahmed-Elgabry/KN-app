@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AdPlanController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\BusinessCenterController;
 use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\CraftController;
 use App\Http\Controllers\API\DiscountController;
@@ -69,6 +70,16 @@ Route::group(['namespace' => 'API'], function(){
             Route::get('/user-employment', [EmploymentController::class, 'userEmployment']);
             Route::get('/city-employment/{id}', [EmploymentController::class, 'cityEmployment']);
             Route::get('/', [EmploymentController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'business_centers'], function () {
+            Route::Post('/store', [BusinessCenterController::class, 'store']);
+            Route::get('/edit/{id}', [BusinessCenterController::class, 'edit']);
+            Route::Post('/update', [BusinessCenterController::class, 'update']);
+            Route::Post('/delete', [BusinessCenterController::class, 'delete']);
+            Route::get('/user-business-center', [BusinessCenterController::class, 'userBusinessCenter']);
+            Route::get('/city-business-center/{id}', [BusinessCenterController::class, 'cityBusinessCenter']);
+            Route::get('/', [BusinessCenterController::class, 'index']);
         });
 
         Route::group(['prefix' => 'wallets'], function () {
