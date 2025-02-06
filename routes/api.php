@@ -8,6 +8,7 @@ use App\Http\Controllers\API\CraftController;
 use App\Http\Controllers\API\DiscountController;
 use App\Http\Controllers\API\EmploymentController;
 use App\Http\Controllers\API\GiftsController;
+use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\PostActionsController;
 use App\Http\Controllers\API\WalletController;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,14 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/update', [CraftController::class, 'update']);
             Route::Post('/delete', [CraftController::class, 'delete']);
             Route::get('/', [CraftController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'items'], function () {
+            Route::Post('/store', [ItemController::class, 'store']);
+            Route::get('/edit/{id}', [ItemController::class, 'edit']);
+            Route::Post('/update', [ItemController::class, 'update']);
+            Route::Post('/delete', [ItemController::class, 'delete']);
+            Route::get('/', [ItemController::class, 'index']);
         });
 
         Route::group(['prefix' => 'ad-plans'], function () {
