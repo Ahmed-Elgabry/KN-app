@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AdPlanController;
+use App\Http\Controllers\API\AdvertisementController;
 use App\Http\Controllers\API\WalletRequestController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CityController;
@@ -69,6 +70,14 @@ Route::group(['namespace' => 'API'], function(){
 
         Route::group(['prefix' => 'wallet-request'], function () {
             Route::Post('/store', [WalletRequestController::class, 'store']);
+        });
+
+        Route::group(['prefix' => 'advertisement'], function () {
+            Route::get('/', [AdvertisementController::class, 'index']);
+            Route::post('/store', [AdvertisementController::class, 'store']);
+            Route::get('/edit/{id}', [AdvertisementController::class, 'edit']);
+            Route::Post('/update', [AdvertisementController::class, 'update']);
+            Route::Post('/delete', [AdvertisementController::class, 'destroy']);
         });
 
         Route::group(['prefix' => 'posts'], function () {

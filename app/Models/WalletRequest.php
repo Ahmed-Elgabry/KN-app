@@ -15,7 +15,7 @@ class WalletRequest extends GlobalModel
 
     public function image()
     {
-        return $this->morphMany(Media::class, 'mediaable')->where('type', 'walletRequest')->latest();
+        return $this->morphMany(Media::class, 'mediaable')->whereIn('type' , ['user_image' , 'id_card_image'])->latest();
     }
 
 }
