@@ -12,6 +12,8 @@ use App\Http\Controllers\API\GiftsController;
 use App\Http\Controllers\API\HealthController;
 use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\PostActionsController;
+use App\Http\Controllers\API\TaxiController;
+use App\Http\Controllers\API\TaxiRequestController;
 use App\Http\Controllers\API\WalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -89,6 +91,22 @@ Route::group(['namespace' => 'API'], function(){
             Route::Post('/update', [HealthController::class, 'update']);
             Route::Post('/delete', [HealthController::class, 'delete']);
             Route::get('/', [HealthController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'taxis'], function () {
+            Route::Post('/store', [TaxiController::class, 'store']);
+            Route::get('/edit/{id}', [TaxiController::class, 'edit']);
+            Route::Post('/update', [TaxiController::class, 'update']);
+            Route::Post('/delete', [TaxiController::class, 'delete']);
+            Route::get('/', [TaxiController::class, 'index']);
+        });
+
+        Route::group(['prefix' => 'taxi-requests'], function () {
+            Route::Post('/store', [TaxiRequestController::class, 'store']);
+            Route::get('/edit/{id}', [TaxiRequestController::class, 'edit']);
+            Route::Post('/update', [TaxiRequestController::class, 'update']);
+            Route::Post('/delete', [TaxiRequestController::class, 'delete']);
+            Route::get('/', [TaxiRequestController::class, 'index']);
         });
 
         Route::group(['prefix' => 'city-markets'], function () {
