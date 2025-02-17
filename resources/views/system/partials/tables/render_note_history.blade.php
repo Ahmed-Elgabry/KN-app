@@ -7,7 +7,7 @@
     @endphp
     @foreach ($noteHistories as $note)
         @php
-            if (isset($note['ind_note_id'])) {z
+            if (isset($note['ind_note_id'])) {
                 $indNoteId = $note['ind_note_id'];
             } else {
                 $indNoteId++;

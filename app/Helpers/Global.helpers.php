@@ -8,6 +8,10 @@ use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
 use App\Repositories\Folder\FolderRepository;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use App\Models\Media;
 
 function img($path)
 {
@@ -706,3 +710,62 @@ function status_enum($key = null, $withLang = false)
     return StatusEnum::values();
 }
 
+function storeImageMedia ($imageRequest = null , $imageDir = null , $resizeWidth = 500, $type = null , $mediaable_id = null , $mediaable_type )
+{
+
+    if (!$mediaable_id || !$mediaable_type || !$imageRequest) {
+        throw new \Exception("Invalid mediaable_type , mediaable_id or imageRequest");
+    }
+
+    ini_set('memory_limit', '-1');
+    $image_request = $imageRequest;
+    $image_path = date("Y-m-d") . '/';
+    $imageName = date('mdYHis') . uniqid() . '.' . $image_request->getClientOriginalExtension();
+
+    if (!is_dir(public_path('storage/' . $imageDir . '/attachments/' . $image_path))) {
+        File::makeDirectory(public_path('storage/' . $imageDir . '/attachments/' . $image_path), $mode = 0777, true, true);
+    }
+
+    Image::make($image_request)
+    ->resize($resizeWidth, null, function ($constraint) {
+        $constraint->aspectRatio();
+    })
+    ->save(public_path('storage/' . $imageDir . '/attachments/') . $image_path . $imageName, 91);
+
+    return Media::create([
+        'filename' =>  $imageName,
+        'mime' => $image_request->getClientMimeType(),
+        'type' => $type,
+        'mediaable_id' => $mediaable_id,
+        'mediaable_type' => $mediaable_type,
+        'url' => url('') . '/storage/' . $imageDir . '/attachments/' . $image_path . $imageName
+    ]);
+
+}
+
+function storeFile($fileRequest = null, $fileDir = 'chat', $type = null, $mediaable_id = null, $mediaable_type = null)
+{
+    
+    if (!$mediaable_id || !$mediaable_type || !$fileRequest) {
+        throw new \Exception("Invalid mediaable_type , mediaable_id or fileRequest");
+    }
+
+    $file_request = $fileRequest;
+    $file_path = date("Y-m-d") . '/';
+    $fileName = date('mdYHis') . uniqid() . '.' . $file_request->getClientOriginalExtension();
+
+    if (!is_dir(public_path('storage/' . $fileDir . '/attachments/' . $file_path))) {
+        File::makeDirectory(public_path('storage/' . $fileDir . '/attachments/' . $file_path), $mode = 0777, true, true);
+    }
+
+    $fileRequest->move(public_path('storage/' . $fileDir . '/attachments/' . $file_path), $fileName);
+
+    return Media::create([
+        'filename' => $fileName,
+        'mime' => $fileRequest->getClientMimeType(),
+        'type' => $type,
+        'mediaable_id' => $mediaable_id,
+        'mediaable_type' => $mediaable_type,
+        'url' => url('') . '/storage/' . $fileDir . '/attachments/' . $file_path . $fileName
+    ]);
+}
