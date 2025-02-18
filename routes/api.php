@@ -9,6 +9,7 @@ use App\Http\Controllers\API\CraftController;
 use App\Http\Controllers\API\DiscountController;
 use App\Http\Controllers\API\EmploymentController;
 use App\Http\Controllers\API\GiftsController;
+use App\Http\Controllers\API\GroupInterestController;
 use App\Http\Controllers\API\HealthController;
 use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\PostActionsController;
@@ -146,5 +147,14 @@ Route::group(['namespace' => 'API'], function(){
                 Route::get('/{id}', [PostActionsController::class, 'comments']);
             });
         });
+
+        Route::group(['prefix' => 'group-interest'], function () {
+            Route::get('/', [GroupInterestController::class, 'index']);
+            Route::Post('/store', [GroupInterestController::class, 'store']);
+            Route::get('/edit', [GroupInterestController::class, 'edit']);
+            Route::Post('/update', [GroupInterestController::class, 'update']);
+            Route::Post('/delete', [GroupInterestController::class, 'destroy']);
+        });
+
     });
 });

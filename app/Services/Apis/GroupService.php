@@ -20,7 +20,7 @@ class GroupService extends BaseService
 
     public function index()
     {
-        return $this->GroupRepository->get();
+        return $this->GroupRepository->getAllData();
     }
 
     public function store($request)

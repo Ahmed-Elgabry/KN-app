@@ -9,6 +9,11 @@ class GroupRepository extends BaseRepository
 {
     protected $modeler = Group::class;
 
+    public function getAllData()
+    {
+        return $this->modeler::with(['owner' , 'members' , 'groupInterest' , 'media'])->get();
+    }
+
     public function deductBalance($userId, $amount)
     {
         $wallet = Wallet::where('user_id', $userId)->first();
