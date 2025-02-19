@@ -9,6 +9,7 @@ use App\Http\Controllers\API\CraftController;
 use App\Http\Controllers\API\DiscountController;
 use App\Http\Controllers\API\EmploymentController;
 use App\Http\Controllers\API\GiftsController;
+use App\Http\Controllers\API\GroupController;
 use App\Http\Controllers\API\GroupInterestController;
 use App\Http\Controllers\API\HealthController;
 use App\Http\Controllers\API\ItemController;
@@ -151,9 +152,18 @@ Route::group(['namespace' => 'API'], function(){
         Route::group(['prefix' => 'group-interest'], function () {
             Route::get('/', [GroupInterestController::class, 'index']);
             Route::Post('/store', [GroupInterestController::class, 'store']);
-            Route::get('/edit', [GroupInterestController::class, 'edit']);
+            Route::get('/edit/{id}', [GroupInterestController::class, 'edit']);
             Route::Post('/update', [GroupInterestController::class, 'update']);
             Route::Post('/delete', [GroupInterestController::class, 'destroy']);
+        });
+
+        Route::group(['prefix' => 'group'], function () {
+            Route::get('/', [GroupController::class, 'index']);
+            Route::Post('/store', [GroupController::class, 'store']);
+            Route::get('/edit/{id}', [GroupController::class, 'edit']);
+            Route::Post('/update', [GroupController::class, 'update']);
+            Route::Post('/delete', [GroupController::class, 'destroy']);
+            Route::get('/user-groups/{id}', [GroupController::class, 'userGroups']);
         });
 
     });

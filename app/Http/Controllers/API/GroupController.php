@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\GroupInterest;
+use App\Models\group;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\HelperApi;
 use App\Services\Apis\GroupService;
@@ -13,10 +13,10 @@ class GroupController extends Controller
 {
     use HelperApi;
 
-    protected $groupInterestService;
-    public function __construct(GroupService $groupInterestService)
+    protected $groupService;
+    public function __construct(GroupService $groupService)
     {
-        $this->groupInterestService = $groupInterestService;
+        $this->groupService = $groupService;
     }
     /**
      * Display a listing of the resource.
@@ -24,8 +24,8 @@ class GroupController extends Controller
     public function index()
     {
         try {
-            $groupInterest = $this->groupInterestService->index();
-            return $this->onSuccess(200 , 'groupInterest' , $groupInterest);
+            $group = $this->groupService->index();
+            return $this->onSuccess(200 , 'group' , $group);
         } catch (\Throwable $th) {
             error_log($th->getMessage());
             return $this->onError(500 , trans('site.server_error') , $th->getMessage());
@@ -47,23 +47,23 @@ class GroupController extends Controller
     {
         try{
             $validator = Validator::make($request->all(), [
-                'social_user_id' => 'required|integer|exists:social_users,id',
+                'user_id' => 'required|integer|exists:social_users,id',
                 'group_interest_id' => 'required|exists:group_interests,id',
                 'group_name' => 'required|string|min:2|max:255',
                 'group_status' => 'required|in:public,private',
                 'is_paid' => 'required|boolean',
-                'price' => 'required|integer',
+                'balance' => 'required|integer',
                 'group_description' => 'required|string',
-                'group_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'main_group_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             ], [], [
-                'social_user_id' => trans('app.social_user_id'),
+                'user_id' => trans('app.user_id'),
                 'group_interest_id' => trans('app.group_interest_id'),
                 'group_name' => trans('app.group_name'),
                 'group_status' => trans('app.group_status'),
                 'is_paid' => trans('app.is_paid'),
-                'price' => trans('app.price'),
+                'balance' => trans('app.balance'),
                 'group_description' => trans('app.group_description'),
-                'group_image' => trans('app.group_image')
+                'main_group_image' => trans('app.main_group_image')
             ]);
             if ($validator->fails()) {
                 $errorString = implode(",", $validator->errors()->all());
@@ -73,8 +73,8 @@ class GroupController extends Controller
                 ], 400);
             }
 
-            $groupInterest = $this->groupInterestService->store($request);
-            return $this->onSuccess(200, 'Group interest added successfully', $groupInterest);
+            $group = $this->groupService->store($request);
+            return $this->onSuccess(200, 'Group added successfully', $group);
         } catch (\Throwable $error) {
             return $this->onError(500, trans('site.server_error'), $error->getMessage());
         }
@@ -83,7 +83,7 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(GroupInterest $groupInterest)
+    public function show(group $group)
     {
         //
     }
@@ -93,11 +93,23 @@ class GroupController extends Controller
      */
     public function edit($id)
     {
-        $groupInterest = $this->groupInterestService->edit($id);
-        if (empty($groupInterest)){
-            return $this->onSuccess(201, 'groupInterest', $groupInterest);
+        $group = $this->groupService->edit($id);
+        if (empty($group)){
+            return $this->onSuccess(201, 'group', $group);
         }
-        return $this->onSuccess(200, 'groupInterest', $groupInterest);
+        return $this->onSuccess(200, 'group', $group);
+    }
+
+    /**
+     * Get user groups.
+     */
+    public function userGroups($id)
+    {
+        $group = $this->groupService->userGroups($id);
+        if (empty($group)){
+            return $this->onSuccess(201, 'group', $group);
+        }
+        return $this->onSuccess(200, 'group', $group);
     }
 
     /**
@@ -107,15 +119,25 @@ class GroupController extends Controller
     {
         try{
             $validator = Validator::make($request->all(), [
-                'name_en' => 'required|string',
-                'name_ar' => 'required|string',
-                'status' => 'required|boolean',
-                'id' => 'required',
+                'user_id' => 'required|integer|exists:social_users,id',
+                'group_interest_id' => 'required|exists:group_interests,id',
+                'group_name' => 'required|string|min:2|max:255',
+                'group_status' => 'required|in:public,private',
+                'is_paid' => 'required|boolean',
+                'balance' => 'required|integer',
+                'group_description' => 'required|string',
+                'main_group_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+                'id' => 'required|integer',
             ], [], [
-                'name_en' => trans('app.name_en'),
-                'name_ar' => trans('app.name_ar'),
-                'status' => trans('app.status'),
-                'id' => trans('app.id'),
+                'user_id' => trans('app.user_id'),
+                'group_interest_id' => trans('app.group_interest_id'),
+                'group_name' => trans('app.group_name'),
+                'group_status' => trans('app.group_status'),
+                'is_paid' => trans('app.is_paid'),
+                'balance' => trans('app.balance'),
+                'group_description' => trans('app.group_description'),
+                'main_group_image' => trans('app.main_group_image'),
+                'id' => trans('app.id')
             ]);
             if ($validator->fails()) {
                 $errorString = implode(",", $validator->errors()->all());
@@ -125,8 +147,8 @@ class GroupController extends Controller
                 ], 400);
             }
 
-            $groupInterestService = $this->groupInterestService->update($request);
-            return $this->onSuccess(200, 'groupInterestService', $groupInterestService);
+            $groupService = $this->groupService->update($request);
+            return $this->onSuccess(200, 'groupService', $groupService);
         } catch (\Throwable $error) {
             return $this->onError(500, trans('site.server_error'), $error->getMessage());
         }
@@ -138,8 +160,8 @@ class GroupController extends Controller
     public function destroy($request)
     {
         try {
-            $this->groupInterestService->delete($request);
-            return $this->onSuccess(200, 'group Interest deleted');
+            $this->groupService->delete($request);
+            return $this->onSuccess(200, 'group deleted');
         } catch (\Throwable $error) {
             return $this->onError(500, trans('site.server_error'), $error->getMessage());
         }

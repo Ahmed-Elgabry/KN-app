@@ -769,3 +769,11 @@ function storeFile($fileRequest = null, $fileDir = 'chat', $type = null, $mediaa
         'url' => url('') . '/storage/' . $fileDir . '/attachments/' . $file_path . $fileName
     ]);
 }
+
+function deleteImageMedia ($path)
+{
+    $imagePath = public_path(str_replace(url('/'), '', $path));
+    if (file_exists($imagePath)) {
+        unlink($imagePath);
+    }
+}

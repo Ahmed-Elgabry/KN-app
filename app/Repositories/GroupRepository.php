@@ -14,16 +14,14 @@ class GroupRepository extends BaseRepository
         return $this->modeler::with(['owner' , 'members' , 'groupInterest' , 'media'])->get();
     }
 
-    public function deductBalance($userId, $amount)
+    public function getData($id)
     {
-        $wallet = Wallet::where('user_id', $userId)->first();
-
-        if ($wallet && $wallet->wallet_balance >= $amount) {
-            $wallet->wallet_balance -= $amount;
-            $wallet->save();
-            return true;
-        }
-
-        return false;
+        return $this->modeler::where('id', $id)->with(['owner', 'members', 'groupInterest', 'media'])->first();
     }
+
+    public function getUserData($id)
+    {
+        return $this->modeler::where('social_user_id', $id)->with(['owner', 'members', 'groupInterest', 'media'])->first();
+    }
+
 }

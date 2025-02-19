@@ -3,19 +3,19 @@
 namespace App\Services\Apis;
 
 use App\Models\Group;
-use App\Repositories\{ GroupRepository , WalletRepository };
+use App\Repositories\{ GroupRepository };
 use App\Services\BaseService;
 use Illuminate\Support\Facades\DB;
 
 class GroupService extends BaseService
 {
-    protected $GroupRepository , $walletRepository;
+    protected $GroupRepository , $walletRepository , $walletService;
     public function __construct(GroupRepository $GroupRepository,
-                                WalletRepository $walletRepository)
+                                WalletService $walletService)
     {
         parent::__construct();
         $this->GroupRepository = $GroupRepository;
-        $this->walletRepository = $walletRepository;
+        $this->walletService = $walletService;
     }
 
     public function index()
@@ -27,24 +27,19 @@ class GroupService extends BaseService
     {
         DB::beginTransaction();
         try {
-
-            $wallet = $this->walletRepository->getFirstWhere(['user_id' => $request->user_id]);
-
-            if ($request?->is_paid AND $wallet->total < $request?->price) {
-                return false;
+            if ($request?->is_paid) {
+                $this->walletService->decreaseWallet($request);
             }
-
             $store = $this->GroupRepository->store([
-                'social_user_id' => $request->social_user_id,
+                'social_user_id' => $request->user_id,
                 'group_interest_id' => $request->group_interest_id,
                 'group_name' => $request->group_name,
                 'group_status' => $request->group_status,
                 'is_paid' => $request->is_paid,
-                'price' => $request->price,
+                'price' => $request->balance,
                 'group_description' => $request->group_description,
             ]);
-
-            if ($request->file('main_group_image')) {
+            if ($request->hasFile('main_group_image')) {
                 storeImageMedia(
                     $request->file('main_group_image'),
                     'main_group_image',
@@ -54,11 +49,6 @@ class GroupService extends BaseService
                     'main_group_image'
                 );
             }
-
-            if ($request->is_paid) {
-                $this->GroupRepository->deductBalance($request->social_user_id, $request->price);
-            }
-
             DB::commit();
             return $this->GroupRepository->find($store->id);
         } catch (\Exception $e) {
@@ -70,13 +60,19 @@ class GroupService extends BaseService
 
     public function edit($id)
     {
-        return $this->GroupRepository->find($id);
+        return $this->GroupRepository->getData($id);
+    }
+
+    public function userGroups($id)
+    {
+        return $this->GroupRepository->getUserData($id);
     }
 
     public function update($request)
     {
         DB::beginTransaction();
         try {
+            $group = $this->GroupRepository->getFirstWhere(['id' => $request->id]);
             $this->GroupRepository->update([
                 'social_user_id' => $request->social_user_id,
                 'group_interest_id' => $request->group_interest_id,
@@ -86,7 +82,20 @@ class GroupService extends BaseService
                 'price' => $request->price,
                 'group_description' => $request->group_description,
             ], $request->id);
-
+            if ($request->hasFile('main_group_image')) {
+                if ($group->media) {
+                    deleteImageMedia(public_path(str_replace(url('/'), '', $group->media->url)));
+                    $group->media->delete();
+                }
+                storeImageMedia(
+                    $request->file($request->main_group_image),
+                   'main_group_image',
+                    500,
+                    Group::class,
+                    $request->id,
+                   'main_group_image'
+                );
+            }
             DB::commit();
             return $this->GroupRepository->find($request->id);
         } catch (\Exception $e) {
@@ -98,6 +107,21 @@ class GroupService extends BaseService
 
     public function delete($request)
     {
-        return  $this->GroupRepository->destroy($request->id);
+        DB::beginTransaction();
+        try {
+            $group = $this->GroupRepository->getFirstWhere(['id' => $request->id]);
+            if ($group->media) {
+                deleteImageMedia(public_path(str_replace(url('/'), '', $group->image->url)));
+                $group->image->delete();
+            }
+            $status = true;
+            $group->delete();
+            DB::commit();
+            return $status;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            errorLog($th->getMessage());
+            return false;
+        }
     }
 }
